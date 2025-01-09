@@ -6,7 +6,7 @@ import HomePage from "./pages/HomePage";
 import ProductsPage from "./pages/ProductsPage";
 import CartsPage from "./pages/CartsPage";
 import Example from "./pages/Example";
-import Testing from "./pages/Testing";
+// import Testing from "./pages/Testing";
 
 createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')).render(
 				<Route path="/products" element={<ProductsPage />} />
 				<Route path="/carts" element={<CartsPage />} />
 				<Route path="/example" element={<Example />} />
-				<Route path="/testing" element={<Testing />} />
+				{/* <Route path="/testing" element={<Testing />} /> */}
           	</Routes>
       	</Router>
   	</React.StrictMode>
