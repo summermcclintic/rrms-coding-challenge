@@ -12,6 +12,8 @@ import {
     DialogActions,
     Button,
     Typography,
+    TextField,
+    DialogContentText,
 } from "@mui/material";
 
 export type Rating = {
@@ -52,7 +54,7 @@ export const ProductsPage = () => {
     const [error, setError] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(defaultProduct);
     const [showProduct, setShowProduct] = useState(false);
-    // const [showForm, setShowForm] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
     const columns = useMemo<MRT_ColumnDef<Product>[]>( () => [
         {
@@ -144,6 +146,10 @@ export const ProductsPage = () => {
         },
     });
 
+    const handleFormClose = () => {
+        setShowForm(false);
+    };
+
     return (
         <div className="container mx-auto p-6">
             <MRT_Table table={table} />
@@ -189,49 +195,140 @@ export const ProductsPage = () => {
                     </button>
                 </DialogActions>
             </Dialog>
-            {/* <React.Fragment>
-                <Button variant="outlined" onClick={handleClickOpen}>
-                    Open form dialog
-                </Button>
+            <React.Fragment>
+                <button
+                    onClick={() => setShowForm(true)}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Add Product
+                </button>
                 <Dialog
-                    open={open}
-                    onClose={handleClose}
+                    open={showForm}
+                    onClose={handleFormClose}
                     PaperProps={{
-                    component: 'form',
-                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                        event.preventDefault();
-                        const formData = new FormData(event.currentTarget);
-                        const formJson = Object.fromEntries((formData as any).entries());
-                        const email = formJson.email;
-                        console.log(email);
-                        handleClose();
-                    },
+                        component: 'form',
+                        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+                            event.preventDefault();
+                            // const formData = new FormData(event.currentTarget);
+                            // const formJson = Object.fromEntries((formData as any).entries());
+                            // const email = formJson.email;
+                            console.log("form is submitted");
+                            handleFormClose();
+                        },
                     }}
                 >
-                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogTitle>New Product</DialogTitle>
                     <DialogContent>
-                    <DialogContentText>
-                        To subscribe to this website, please enter your email address here. We
-                        will send updates occasionally.
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        required
-                        margin="dense"
-                        id="name"
-                        name="email"
-                        label="Email Address"
-                        type="email"
-                        fullWidth
-                        variant="standard"
-                    />
+                        <DialogContentText>
+                            Please enter product details.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="name"
+                            name="name"
+                            label="Name of product"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="description"
+                            name="description"
+                            label="Description"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="price"
+                            name="price"
+                            label="Price"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="category"
+                            name="category"
+                            label="Category"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="stock"
+                            name="stock"
+                            label="Stock"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="sku"
+                            name="sku"
+                            label="SKU"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="image_url"
+                            name="image_url"
+                            label="Image URL"
+                            type="url"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="rate"
+                            name="rate"
+                            label="Rate"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="rate_count"
+                            name="rate_count"
+                            label="Rating count"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                        />
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit">Subscribe</Button>
+                        {/* change buttons */}
+                        <Button onClick={handleFormClose}>Cancel</Button>
+                        <Button type="submit">Add</Button>
                     </DialogActions>
                 </Dialog>
-            </React.Fragment> */}
+            </React.Fragment>
         </div>
     );
 };
