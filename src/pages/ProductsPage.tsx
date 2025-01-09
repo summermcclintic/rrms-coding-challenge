@@ -16,21 +16,23 @@ import {
     DialogContentText,
 } from "@mui/material";
 
+// add back to home button
+
 export type Rating = {
-    rate: number;
-    count: number;
+    rate: number,
+    count: number,
 }
 
 export type Product = {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    category: string;
-    stock: number;
-    sku: string;
-    image_url: string;
-    rating: Rating;
+    id: string,
+    name: string,
+    description: string,
+    price: number,
+    category: string,
+    stock: number,
+    sku: string,
+    image_url: string,
+    rating: Rating,
 };
 
 export const defaultProduct = {
@@ -49,7 +51,7 @@ export const defaultProduct = {
 }
 
 export const ProductsPage = () => {
-    const [data, setData] = useState<Product[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(defaultProduct);
@@ -82,13 +84,13 @@ export const ProductsPage = () => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch products");
                 }
-                const products = await response.json();
-                setData(products);
+                const data = await response.json();
+                setProducts(data);
             } catch (error) {
                 setError(error.message);
             } finally {
                 setLoading(false);
-                console.log(data);
+                // console.log(data);
             }
         };
 
@@ -104,7 +106,7 @@ export const ProductsPage = () => {
 
     const table = useMaterialReactTable({
         columns,
-        data,
+        data: products,
         muiTableBodyRowProps: ({ row }) => ({
             onClick: (event) => {
                 console.info(event, row.original.id);
