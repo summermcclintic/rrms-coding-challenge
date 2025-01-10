@@ -12,6 +12,8 @@ import {
     DialogActions,
     Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export type Rating = {
     rate: number,
@@ -105,6 +107,7 @@ const CartsPage = () => {
     const [error, setError] = useState(false);
     const [selectedCart, setSelectedCart] = useState<UserAndCart>(defaultCart);
     const [showCart, setShowCart] = useState(false);
+    const navigate = useNavigate();
 
     const columns = useMemo<MRT_ColumnDef<UserAndCart & { numItems: number }>[]>( () => [
         {
@@ -112,9 +115,9 @@ const CartsPage = () => {
             id: 'fullName',
             header: 'User Full Name',
         },
-        // display date nicely?
         {
-            accessorKey: 'date',
+            accessorFn: (row) => dayjs(row.date).format('MM/DD/YYYY hh:mm:ss A'),
+            id: 'formattedDateTime',
             header: 'Date',
         },
         {
@@ -130,6 +133,9 @@ const CartsPage = () => {
     // comine with other useeffect
     useEffect(() => {
         const fetchCarts = async () => {
+            if (!products.length) {
+                setLoading(true);
+            }
             try {
                 const response = await fetch("https://api.jsoning.com/mock/public/carts");
                 if (!response.ok) {
@@ -138,20 +144,18 @@ const CartsPage = () => {
                 const data = await response.json();
                 setCarts(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);  // where set to true?
+                setError(true);
+                console.error(error);
+                return;
             }
+            setError(false);
+            setLoading(false);
         };
 
-        fetchCarts();
-    }, []);
-
-    if (loading) return <p>Loading carts...</p>;
-    if (error) return <p>Error: {error}</p>;
-
-    useEffect(() => {
         const fetchUsers = async () => {
+            if (!products.length) {
+                setLoading(true);
+            }
             try {
                 const response = await fetch("https://api.jsoning.com/mock/public/users");
                 if (!response.ok) {
@@ -160,17 +164,18 @@ const CartsPage = () => {
                 const data = await response.json();
                 setUsers(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                setError(true);
+                console.error(error);
+                return;
             }
+            setError(false);
+            setLoading(false);
         };
 
-        fetchUsers();
-    }, []);
-
-    useEffect(() => {
         const fetchProducts = async () => {
+            if (!products.length) {
+                setLoading(true);
+            }
             try {
                 const response = await fetch("https://api.jsoning.com/mock/public/products");
                 if (!response.ok) {
@@ -179,12 +184,16 @@ const CartsPage = () => {
                 const data = await response.json();
                 setProducts(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                setError(true);
+                console.error(error);
+                return;
             }
+            setError(false);
+            setLoading(false);
         };
 
+        fetchCarts();
+        fetchUsers();
         fetchProducts();
     }, []);
 
@@ -212,7 +221,7 @@ const CartsPage = () => {
         columns,
         data: cartsTableData,
         muiTableBodyRowProps: ({ row }) => ({
-            onClick: (event) => {
+            onClick: () => {
                 setSelectedCart(row.original);
                 setShowCart(true);
             },
@@ -249,10 +258,20 @@ const CartsPage = () => {
                 border: '1px solid rgba(81, 81, 81, .5)',
             },
         },
+        state: {
+            isLoading: loading,
+            showAlertBanner: error,
+        },
     });
 
     return (
-       <div className="container mx-auto p-6">
+        <div className="container mx-auto p-6">
+            <button
+                onClick={() => navigate("/")}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+                Back to Home
+            </button>
             <MRT_Table table={table} />
             <Dialog
                 open={showCart}

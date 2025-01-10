@@ -104,7 +104,7 @@ export const ProductsPage = () => {
         columns,
         data: products,
         muiTableBodyRowProps: ({ row }) => ({
-            onClick: (event) => {
+            onClick: () => {
                 setSelectedProduct(row.original);
                 setShowProduct(true);
             },
