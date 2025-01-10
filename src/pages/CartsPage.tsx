@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import Button from "../components/Button";
 
 export type Rating = {
     rate: number,
@@ -267,9 +266,12 @@ const CartsPage = () => {
 
     return (
         <div className="relative min-h-screen bg-gray-100">
-            <Button onClick={() => navigate("/")} color="blue" className="absolute top-4 left-4">
+            <button
+                onClick={() => navigate("/")}
+                className="absolute top-4 left-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
+            >
                 Back to Home
-            </Button>
+            </button>
             <div className="text-4xl font-bold text-center">Carts</div>
             <div className="flex flex-col items-center justify-center">
                 <MRT_Table table={table} className="mt-8 max-w-screen-md"/>

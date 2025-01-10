@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import Button from "../components/Button";
+// import Button from "../components/Button";
+// import ProductDialog from "../components/ProductDialog";
 
 export type Rating = {
     rate: number,
@@ -179,15 +180,21 @@ export const ProductsPage = () => {
                 pauseOnHover
                 theme="light"
             />
-            <Button onClick={() => navigate("/")} color="blue" className="absolute top-4 left-4">
+            <button
+                onClick={() => navigate("/")}
+                className="absolute top-4 left-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
+            >
                 Back to Home
-            </Button>
+            </button>
             <div className="text-4xl font-bold text-center">Products</div>
             <div className="flex flex-col items-center justify-center">
                 <MRT_Table table={table} className="mt-8 max-w-screen-md"/>
-                <Button onClick={() => setShowForm(true)} color="green" className="mt-4">
+                <button
+                    onClick={() => setShowForm(true)}
+                    className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                >
                     Add Product
-                </Button>
+                </button>
             </div>
             <Dialog
                 open={showProduct}
@@ -226,9 +233,12 @@ export const ProductsPage = () => {
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setShowProduct(false)} color="blue">
-                        Close
-                    </Button>
+                <button
+                    onClick={() => setShowProduct(false)} color="primary"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                >
+                    Close
+                </button>
                 </DialogActions>
             </Dialog>
             <Dialog
@@ -349,12 +359,18 @@ export const ProductsPage = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleFormClose} color="red">
+                    <button
+                        onClick={handleFormClose}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                    >
                         Cancel
-                    </Button>
-                    <Button onClick={handleFormClose} color="green">
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                    >
                         Add
-                    </Button>
+                    </button>
                 </DialogActions>
             </Dialog>
         </div>
