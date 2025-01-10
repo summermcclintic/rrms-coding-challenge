@@ -165,7 +165,7 @@ export const ProductsPage = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="relative min-h-screen bg-gray-100">
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -180,11 +180,20 @@ export const ProductsPage = () => {
             />
             <button
                 onClick={() => navigate("/")}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="absolute top-4 left-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
             >
                 Back to Home
             </button>
-            <MRT_Table table={table} />
+            <div className="text-4xl font-bold text-center">Products</div>
+            <div className="flex flex-col items-center justify-center">
+                <MRT_Table table={table} className="mt-8 max-w-screen-md"/>
+                <button
+                    onClick={() => setShowForm(true)}
+                    className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                >
+                    Add Product
+                </button>
+            </div>
             <Dialog
                 open={showProduct}
                 onClose={() => setShowProduct(false)}
@@ -199,7 +208,6 @@ export const ProductsPage = () => {
                     <Typography variant="body1">
                         <strong>Description:</strong> {selectedProduct.description}
                     </Typography>
-                    {/* change order to match form ******************************* */}
                     <Typography variant="body1">
                         <strong>Price:</strong> ${selectedProduct.price}
                     </Typography>
@@ -225,143 +233,144 @@ export const ProductsPage = () => {
                 <DialogActions>
                     <button
                         onClick={() => setShowProduct(false)} color="primary"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
                     >
                         Close
                     </button>
                 </DialogActions>
             </Dialog>
-            <React.Fragment>
-                <button
-                    onClick={() => setShowForm(true)}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    Add Product
-                </button>
-                <Dialog
-                    open={showForm}
-                    onClose={handleFormClose}
-                    PaperProps={{
-                        component: 'form',
-                        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                            event.preventDefault();
-                            handleSubmit();
-                            handleFormClose();
-                        },
-                    }}
-                >
-                    <DialogTitle>New Product</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter product details.
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="name"
-                            name="name"
-                            label="Name"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="description"
-                            name="description"
-                            label="Description"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="price"
-                            name="price"
-                            label="Price"
-                            type="number"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="category"
-                            name="category"
-                            label="Category"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="stock"
-                            name="stock"
-                            label="Number In-Stock"
-                            type="number"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="rate"
-                            name="rate"
-                            label="Rating"
-                            type="number"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="rate_count"
-                            name="rate_count"
-                            label="Rating count"
-                            type="number"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="sku"
-                            name="sku"
-                            label="SKU"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="image_url"
-                            name="image_url"
-                            label="Image URL"
-                            type="url"
-                            fullWidth
-                            variant="standard"
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        {/* change button format ****************************************/}
-                        <button onClick={handleFormClose}>Cancel</button>
-                        <button type="submit">Add</button>
-                    </DialogActions>
-                </Dialog>
-            </React.Fragment>
+            <Dialog
+                open={showForm}
+                onClose={handleFormClose}
+                PaperProps={{
+                    component: 'form',
+                    onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+                        event.preventDefault();
+                        handleSubmit();
+                        handleFormClose();
+                    },
+                }}
+            >
+                <DialogTitle>New Product</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please enter product details.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        name="name"
+                        label="Name"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="description"
+                        name="description"
+                        label="Description"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="price"
+                        name="price"
+                        label="Price"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="category"
+                        name="category"
+                        label="Category"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="stock"
+                        name="stock"
+                        label="Number In-Stock"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="rate"
+                        name="rate"
+                        label="Rating"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="rate_count"
+                        name="rate_count"
+                        label="Rating count"
+                        type="number"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="sku"
+                        name="sku"
+                        label="SKU"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                    />
+                    <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="image_url"
+                        name="image_url"
+                        label="Image URL"
+                        type="url"
+                        fullWidth
+                        variant="standard"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <button
+                        onClick={handleFormClose}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-md"
+                    >
+                        Add
+                    </button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

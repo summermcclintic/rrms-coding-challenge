@@ -265,14 +265,17 @@ const CartsPage = () => {
     });
 
     return (
-        <div className="container mx-auto p-6">
+        <div className="relative min-h-screen bg-gray-100">
             <button
                 onClick={() => navigate("/")}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="absolute top-4 left-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
             >
                 Back to Home
             </button>
-            <MRT_Table table={table} />
+            <div className="text-4xl font-bold text-center">Carts</div>
+            <div className="flex flex-col items-center justify-center">
+                <MRT_Table table={table} className="mt-8 max-w-screen-md"/>
+            </div>
             <Dialog
                 open={showCart}
                 onClose={() => setShowCart(false)}
@@ -319,7 +322,7 @@ const CartsPage = () => {
                 <DialogActions>
                     <button
                         onClick={() => setShowCart(false)} color="primary"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md"
                     >
                         Close
                     </button>
