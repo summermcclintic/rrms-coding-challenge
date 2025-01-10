@@ -2,14 +2,14 @@ import React, { ReactNode } from "react";
 
 interface Props {
     children: ReactNode;
-    color: string;
     onClick: () => void;
     className?: string;
+    type?: "submit" | "reset" | "button" | undefined;
 }
 
-const Button = ({ children, onClick, color, className = "" }: Props) => {
+const Button = ({ children, onClick, className = "", type = undefined }: Props) => {
     return (
-        <button onClick={onClick} className={"bg-" + color + "-500 hover:bg-" + color + "-700 text-white font-bold py-2 px-4 rounded shadow-md " + className}>
+        <button type={type} onClick={onClick} className={"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md " + className}>
             {children}
         </button>
     );
