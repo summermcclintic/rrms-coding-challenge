@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import './HomePage.css'
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -20,18 +21,6 @@ const HomePage = () => {
                 >
                     Carts
                 </button>
-                <button
-                    onClick={() => navigate("/example")}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    Example
-                </button>
-                {/* <button
-                    onClick={() => navigate("/testing")}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    Testing
-                </button> */}
             </div>
         </div>
     );
