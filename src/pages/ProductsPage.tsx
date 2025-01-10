@@ -10,14 +10,12 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button,
     Typography,
     TextField,
     DialogContentText,
 } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
-
-// add back to home button
+import { useNavigate } from "react-router-dom";
 
 export type Rating = {
     rate: number,
@@ -58,6 +56,7 @@ export const ProductsPage = () => {
     const [selectedProduct, setSelectedProduct] = useState(defaultProduct);
     const [showProduct, setShowProduct] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const navigate = useNavigate();
 
     const columns = useMemo<MRT_ColumnDef<Product>[]>( () => [
         {
@@ -80,6 +79,9 @@ export const ProductsPage = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
+            if (!products.length) {
+                setLoading(true);
+            }
             try {
                 const response = await fetch("https://api.jsoning.com/mock/public/products");
                 if (!response.ok) {
@@ -88,18 +90,15 @@ export const ProductsPage = () => {
                 const data = await response.json();
                 setProducts(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+                setError(true);
+                console.error(error);
+                return;
             }
+            setError(false);
+            setLoading(false);
         };
-
         fetchProducts();
     }, []);
-
-    // test these out and fix
-    if (loading) return <p>Loading products...</p>;
-    if (error) return <p>Error: {error}</p>;
 
     const table = useMaterialReactTable({
         columns,
@@ -142,6 +141,10 @@ export const ProductsPage = () => {
                 border: '1px solid rgba(81, 81, 81, .5)',
             },
         },
+        state: {
+            isLoading: loading,
+            showAlertBanner: error,
+        },
     });
 
     const handleFormClose = () => {
@@ -175,6 +178,12 @@ export const ProductsPage = () => {
                 pauseOnHover
                 theme="light"
             />
+            <button
+                onClick={() => navigate("/")}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+                Back to Home
+            </button>
             <MRT_Table table={table} />
             <Dialog
                 open={showProduct}
@@ -187,15 +196,15 @@ export const ProductsPage = () => {
                     <Typography variant="body1">
                         <strong>Name:</strong> {selectedProduct.name}
                     </Typography>
+                    <Typography variant="body1">
+                        <strong>Description:</strong> {selectedProduct.description}
+                    </Typography>
                     {/* change order to match form ******************************* */}
                     <Typography variant="body1">
                         <strong>Price:</strong> ${selectedProduct.price}
                     </Typography>
                     <Typography variant="body1">
                         <strong>Category:</strong> {selectedProduct.category}
-                    </Typography>
-                    <Typography variant="body1">
-                        <strong>Description:</strong> {selectedProduct.description}
                     </Typography>
                     <Typography variant="body1">
                         <strong>Number In-Stock:</strong> {selectedProduct.stock}
@@ -207,10 +216,10 @@ export const ProductsPage = () => {
                         <strong>Rating Count:</strong> {selectedProduct.rating.count}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Image URL:</strong> {selectedProduct.image_url}
+                        <strong>SKU:</strong> {selectedProduct.sku}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>SKU:</strong> {selectedProduct.sku}
+                        <strong>Image URL:</strong> {selectedProduct.image_url}
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -305,28 +314,6 @@ export const ProductsPage = () => {
                             autoFocus
                             required
                             margin="dense"
-                            id="sku"
-                            name="sku"
-                            label="SKU"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="image_url"
-                            name="image_url"
-                            label="Image URL"
-                            type="url"
-                            fullWidth
-                            variant="standard"
-                        />
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
                             id="rate"
                             name="rate"
                             label="Rating"
@@ -342,6 +329,28 @@ export const ProductsPage = () => {
                             name="rate_count"
                             label="Rating count"
                             type="number"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="sku"
+                            name="sku"
+                            label="SKU"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="image_url"
+                            name="image_url"
+                            label="Image URL"
+                            type="url"
                             fullWidth
                             variant="standard"
                         />
