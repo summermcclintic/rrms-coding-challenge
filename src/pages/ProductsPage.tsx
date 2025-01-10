@@ -285,7 +285,7 @@ export const ProductsPage = () => {
                         id="price"
                         name="price"
                         label="Price"
-                        type="number"
+                        type="text"
                         fullWidth
                         variant="standard"
                     />
@@ -318,7 +318,7 @@ export const ProductsPage = () => {
                         id="rate"
                         name="rate"
                         label="Rating"
-                        type="number"
+                        type="text"
                         fullWidth
                         variant="standard"
                     />
