@@ -15,6 +15,7 @@ import {
     TextField,
     DialogContentText,
 } from "@mui/material";
+import { ToastContainer, toast } from 'react-toastify';
 
 // add back to home button
 
@@ -90,26 +91,21 @@ export const ProductsPage = () => {
                 setError(error.message);
             } finally {
                 setLoading(false);
-                // console.log(data);
             }
         };
 
         fetchProducts();
     }, []);
 
+    // test these out and fix
     if (loading) return <p>Loading products...</p>;
     if (error) return <p>Error: {error}</p>;
-
-    // useEffect(() => {
-    //     console.log("Fetched Data:", data);
-    // }, [data]);
 
     const table = useMaterialReactTable({
         columns,
         data: products,
         muiTableBodyRowProps: ({ row }) => ({
             onClick: (event) => {
-                console.info(event, row.original.id);
                 setSelectedProduct(row.original);
                 setShowProduct(true);
             },
@@ -152,8 +148,33 @@ export const ProductsPage = () => {
         setShowForm(false);
     };
 
+    const handleSubmit = () => {
+        toast.success('Product added!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
+    };
+
     return (
         <div className="container mx-auto p-6">
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <MRT_Table table={table} />
             <Dialog
                 open={showProduct}
@@ -163,9 +184,10 @@ export const ProductsPage = () => {
             >
                 <DialogTitle>Product Details</DialogTitle>
                 <DialogContent>
-                    <Typography variant="h6" gutterBottom>
-                        {selectedProduct.name}
+                    <Typography variant="body1">
+                        <strong>Name:</strong> {selectedProduct.name}
                     </Typography>
+                    {/* change order to match form ******************************* */}
                     <Typography variant="body1">
                         <strong>Price:</strong> ${selectedProduct.price}
                     </Typography>
@@ -176,13 +198,16 @@ export const ProductsPage = () => {
                         <strong>Description:</strong> {selectedProduct.description}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>In Stock:</strong> {selectedProduct.stock}
+                        <strong>Number In-Stock:</strong> {selectedProduct.stock}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Rate:</strong> {selectedProduct.rating.rate}
+                        <strong>Rating:</strong> {selectedProduct.rating.rate}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>Count:</strong> {selectedProduct.rating.count}
+                        <strong>Rating Count:</strong> {selectedProduct.rating.count}
+                    </Typography>
+                    <Typography variant="body1">
+                        <strong>Image URL:</strong> {selectedProduct.image_url}
                     </Typography>
                     <Typography variant="body1">
                         <strong>SKU:</strong> {selectedProduct.sku}
@@ -211,10 +236,7 @@ export const ProductsPage = () => {
                         component: 'form',
                         onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                             event.preventDefault();
-                            // const formData = new FormData(event.currentTarget);
-                            // const formJson = Object.fromEntries((formData as any).entries());
-                            // const email = formJson.email;
-                            console.log("form is submitted");
+                            handleSubmit();
                             handleFormClose();
                         },
                     }}
@@ -230,7 +252,7 @@ export const ProductsPage = () => {
                             margin="dense"
                             id="name"
                             name="name"
-                            label="Name of product"
+                            label="Name"
                             type="text"
                             fullWidth
                             variant="standard"
@@ -274,7 +296,7 @@ export const ProductsPage = () => {
                             margin="dense"
                             id="stock"
                             name="stock"
-                            label="Stock"
+                            label="Number In-Stock"
                             type="number"
                             fullWidth
                             variant="standard"
@@ -307,7 +329,7 @@ export const ProductsPage = () => {
                             margin="dense"
                             id="rate"
                             name="rate"
-                            label="Rate"
+                            label="Rating"
                             type="number"
                             fullWidth
                             variant="standard"
@@ -325,9 +347,9 @@ export const ProductsPage = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        {/* change buttons */}
-                        <Button onClick={handleFormClose}>Cancel</Button>
-                        <Button type="submit">Add</Button>
+                        {/* change button format ****************************************/}
+                        <button onClick={handleFormClose}>Cancel</button>
+                        <button type="submit">Add</button>
                     </DialogActions>
                 </Dialog>
             </React.Fragment>

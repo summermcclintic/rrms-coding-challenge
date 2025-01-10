@@ -10,7 +10,6 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button,
     Typography,
 } from "@mui/material";
 
@@ -58,18 +57,17 @@ export type User = {
     phone: string,
 }
 
-export const defaultCart = {
-    "id": "x",
-    "userId": 0,
-    "items": [
-      {
-        "productId": 0,
-        "quantity": 0
-      }
-    ],
-    "date": "x",
-    "status": "x"
-}
+export type UserAndCart = Cart & {
+    user: User | {
+        firstname: string;
+        lastname: string;
+        email: string;
+        city: string;
+        state: string;
+        zipcode: string;
+        phone: string;
+    };
+};
 
 export const defaultUser = {
     "id": "x",
@@ -85,19 +83,36 @@ export const defaultUser = {
     "phone": "x"
 }
 
+export const defaultCart = {
+    "id": "x",
+    "userId": 0,
+    "items": [
+      {
+        "productId": 0,
+        "quantity": 0
+      }
+    ],
+    "date": "x",
+    "status": "x",
+    "user": defaultUser
+}
+
 const CartsPage = () => {
     const [carts, setCarts] = useState<Cart[]>([]);
     const [users, setUsers] = useState<User[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [selectedCart, setSelectedCart] = useState(defaultCart);
+    const [selectedCart, setSelectedCart] = useState<UserAndCart>(defaultCart);
     const [showCart, setShowCart] = useState(false);
 
-    const columns = useMemo<MRT_ColumnDef<Cart & { userFullName: string, numItems: number }>[]>( () => [
+    const columns = useMemo<MRT_ColumnDef<UserAndCart & { numItems: number }>[]>( () => [
         {
-            accessorKey: 'userFullName',
+            accessorFn: (row) => `${row.user.firstname} ${row.user.lastname}`,
+            id: 'fullName',
             header: 'User Full Name',
         },
+        // display date nicely?
         {
             accessorKey: 'date',
             header: 'Date',
@@ -108,10 +123,11 @@ const CartsPage = () => {
         },
         {
             accessorKey: 'numItems',
-            header: 'Number of Items in Cart',
+            header: 'Number of Items',
         },
     ], [], );
 
+    // comine with other useeffect
     useEffect(() => {
         const fetchCarts = async () => {
             try {
@@ -125,7 +141,6 @@ const CartsPage = () => {
                 setError(error.message);
             } finally {
                 setLoading(false);  // where set to true?
-                // console.log(data);
             }
         };
 
@@ -148,20 +163,47 @@ const CartsPage = () => {
                 setError(error.message);
             } finally {
                 setLoading(false);
-                // console.log(data);
             }
         };
 
         fetchUsers();
     }, []);
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch("https://api.jsoning.com/mock/public/products");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch products");
+                }
+                const data = await response.json();
+                setProducts(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
     const cartsTableData = useMemo(() => {
         return carts.map((cart) => {
             const user = users.find((u) => u.id === String(cart.userId));
+            const totalQuantity = cart.items.reduce((sum, item) => sum + item.quantity, 0);
             return {
                 ...cart,
-                userFullName: user ? `${user.firstname} ${user.lastname}` : "Unknown User",
-                numItems: cart.items.length,
+                user: user || {
+                    firstname: "Abandoned",
+                    lastname: "User",
+                    email: "N/A",
+                    city: "N/A",
+                    state: "N/A",
+                    zipcode: "N/A",
+                    phone: "N/A",
+                },
+                numItems: totalQuantity,
             };
         });
     }, [carts, users]);
@@ -171,7 +213,6 @@ const CartsPage = () => {
         data: cartsTableData,
         muiTableBodyRowProps: ({ row }) => ({
             onClick: (event) => {
-                console.info(event, row.original.id);
                 setSelectedCart(row.original);
                 setShowCart(true);
             },
@@ -221,33 +262,40 @@ const CartsPage = () => {
             >
                 <DialogTitle>Cart Details</DialogTitle>
                 <DialogContent>
-                    <Typography variant="h6" gutterBottom>
-                        {selectedCart.id}
+                    <Typography variant="body1">
+                        <strong>User Full Name:</strong> {selectedCart.user.firstname} {selectedCart.user.lastname}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>User name:</strong> Firstname Lastname
+                        <strong>User Email:</strong> {selectedCart.user.email}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>User email:</strong> example@gmail.com
+                        <strong>User City, State, and Zip Code:</strong> {selectedCart.user.city} {selectedCart.user.state} {selectedCart.user.zipcode}
                     </Typography>
                     <Typography variant="body1">
-                        <strong>User city, state, and zip code:</strong> Bville, NY 13027
+                        <strong>User Phone:</strong> {selectedCart.user.phone}
                     </Typography>
-                    <Typography variant="body1">
-                        <strong>User Phone:</strong> 123-123-1234
+                    <Typography variant="h6" gutterBottom style={{ marginTop: "1em" }}>
+                        Products
                     </Typography>
-                    <Typography variant="body1">
-                        <strong>For each product in cart:</strong>
-                    </Typography>
-                    <Typography variant="body1">
-                        <strong>- Product name:</strong> Product name
-                    </Typography>
-                    <Typography variant="body1">
-                        <strong>- Product description:</strong> Product description
-                    </Typography>
-                    <Typography variant="body1">
-                        <strong>- Quantity:</strong> Quantity
-                    </Typography>
+                    {selectedCart.items.map((item, index) => (
+                        <div key={index}>
+                            <Typography variant="body1">
+                                <strong>Product Name:</strong> {
+                                    products.find((p) => p.id === String(item.productId))?.name ||
+                                    `Unknown Product (ID: ${item.productId})`
+                                }
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Product Description:</strong> {
+                                    products.find((p) => p.id === String(item.productId))?.description || 
+                                    'Description not available'
+                                }
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                <strong>Quantity:</strong> {item.quantity}
+                            </Typography>
+                        </div>
+                    ))}
                 </DialogContent>
                 <DialogActions>
                     <button
@@ -258,12 +306,6 @@ const CartsPage = () => {
                     </button>
                 </DialogActions>
             </Dialog>
-            {/* <h1>Users</h1>
-			<ul>
-				{users.map((user) => (
-				<li key={user.id}>{user.firstname}</li> // Adjust according to your JSON structure
-				))}
-			</ul> */}
         </div>
     );
 };
