@@ -130,7 +130,6 @@ const CartsPage = () => {
         },
     ], [], );
 
-    // comine with other useeffect
     useEffect(() => {
         const fetchCarts = async () => {
             if (!products.length) {
