@@ -8,7 +8,7 @@ import CartsPage from "./pages/CartsPage";
 
 createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-      	<Router>
+      	<Router basename="/rrms-coding-challenge">
           	<Routes>
 				<Route path="/" element={<HomePage />} />
 				<Route path="/products" element={<ProductsPage />} />
