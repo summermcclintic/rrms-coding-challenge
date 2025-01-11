@@ -184,7 +184,7 @@ export const ProductsPage = () => {
             >
                 Back to Home
             </button>
-            <div className="text-4xl font-bold text-center">Products</div>
+            <div className="text-4xl font-bold text-center text-black">Products</div>
             <div className="flex flex-col items-center justify-center">
                 <MRT_Table table={table} className="mt-8 max-w-screen-md"/>
                 <button

@@ -271,7 +271,7 @@ const CartsPage = () => {
             >
                 Back to Home
             </button>
-            <div className="text-4xl font-bold text-center">Carts</div>
+            <div className="text-4xl font-bold text-center text-black">Carts</div>
             <div className="flex flex-col items-center justify-center">
                 <MRT_Table table={table} className="mt-8 max-w-screen-md"/>
             </div>
